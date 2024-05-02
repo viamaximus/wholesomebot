@@ -16,7 +16,7 @@ def get_response(user_input: str) -> str:
     elif 'einar' in lowered: 
         return 'femboy'
     elif 'will you marry me' in lowered: 
-        return 'no, furry'
+        return 'fine, just this once... <3'
     #else: 
         #return choice(['im not sure what you mean. '
         #                'try asking me to roll a dice or say hello', 
