@@ -15,7 +15,7 @@ intents = Intents.default()
 intents.message_content = True
 client: Client = Client(intents=intents)
 
-bot = commands.Bot(command_prefix='~uwu~', intents=discord.Intents.all())
+bot = commands.Bot(command_prefix='~', intents=discord.Intents.all())
 
 #message functionality
 async def send_message(message: Message, user_message: str) -> None:
