@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from discord import Intents, Client, Message
 from discord.ext import commands
 from responses import get_response
+import random
 
 #load token
 load_dotenv()
@@ -16,6 +17,18 @@ intents.message_content = True
 client: Client = Client(intents=intents)
 
 bot = commands.Bot(command_prefix='~', intents=discord.Intents.all())
+
+@client.command(alias=['8ball', 'eightball', '8 ball', 'eight ball'])
+async def magic8ball(ctx, *, question):
+    with open('8ballresponses.txt', 'r') as f:
+        random_responses = f.readlines()
+        response = random.choice(random_responses)
+    await ctx.send(response)
+
+@client.command()
+async def ping(ctx):
+    bot_latency = round(client.latency * 1000)
+    await ctx.send(f"Bot latency: {bot_latency}ms")
 
 #message functionality
 async def send_message(message: Message, user_message: str) -> None:
