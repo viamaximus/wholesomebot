@@ -6,9 +6,6 @@ from dotenv import load_dotenv
 from discord import Intents, Client, Message
 from discord.ext import commands, tasks
 from responses import get_response
-from magicresponse import magic_responses
-
-import random
 from itertools import cycle
 
 #load token
@@ -23,7 +20,6 @@ bot_status = cycle(['in my banky', ':3:3:#:3:3:3', 'mphghh...', 'in your walls',
 async def change_status():
     await client.change_presence(activity=discord.Game(next(bot_status)))
 
-
 #handle startup
 @client.event
 async def on_ready() -> None:
@@ -37,19 +33,11 @@ async def load():
 
 
 
-#8ball game
-@client.command(aliases=['8ball', 'eightball', '8 ball', 'eight ball'])
-async def magic8ball(ctx, *, question):
-    if not magic_responses:
-        response = "I don't have any responses right now."
-    else:
-        response = random.choice(magic_responses)
-    await ctx.send(response)
-
-
 #main entry point
 async def main():
     async with client: 
         await load()
         await client.start(TOKEN)
+
+asyncio.run(main())
 
