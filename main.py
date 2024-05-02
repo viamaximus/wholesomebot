@@ -14,13 +14,13 @@ TOKEN: Final[str] = os.getenv('DISCORD_TOKEN')
 #bot setup
 intents = Intents.default()
 intents.message_content = True
-client: Client = Client(intents=intents)
+#client: Client = Client(intents=intents)
 
 client = commands.Bot(command_prefix='~', intents=discord.Intents.all())
 
 @client.command(alias=['8ball', 'eightball', '8 ball', 'eight ball'])
 async def magic8ball(ctx, *, question):
-    with open('8ballresponses.txt', 'r') as f:
+    with open('./8ballresponses.txt', 'r') as f:
         random_responses = f.readlines()
         response = random.choice(random_responses)
     await ctx.send(response)
