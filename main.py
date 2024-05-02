@@ -16,7 +16,7 @@ intents = Intents.default()
 intents.message_content = True
 client: Client = Client(intents=intents)
 
-bot = commands.Bot(command_prefix='~', intents=discord.Intents.all())
+client = commands.Bot(command_prefix='~', intents=discord.Intents.all())
 
 @client.command(alias=['8ball', 'eightball', '8 ball', 'eight ball'])
 async def magic8ball(ctx, *, question):
