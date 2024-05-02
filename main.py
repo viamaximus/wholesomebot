@@ -14,7 +14,7 @@ TOKEN: Final[str] = os.getenv('DISCORD_TOKEN')
 
 client = commands.Bot(command_prefix='~', intents=discord.Intents.all())
 
-bot_status = cycle(['in my banky', ':3:3:#:#', 'mphghh...', 'in your walls'])
+bot_status = cycle(['in my banky', ':3:3:#:3:3:3', 'mphghh...', 'in your walls'])
 @tasks.loop(seconds=10)                   
 async def change_status():
     await client.change_presence(activity=discord.Game(next(bot_status)))
