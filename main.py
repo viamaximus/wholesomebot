@@ -1,7 +1,9 @@
 from typing import Final
 import os
+import discord
 from dotenv import load_dotenv
 from discord import Intents, Client, Message
+from discord.ext import commands
 from responses import get_response
 
 #load token
@@ -12,6 +14,8 @@ TOKEN: Final[str] = os.getenv('DISCORD_TOKEN')
 intents = Intents.default()
 intents.message_content = True
 client: Client = Client(intents=intents)
+
+bot = commands.Bot(command_prefix='~uwu~', intents=discord.Intents.all())
 
 #message functionality
 async def send_message(message: Message, user_message: str) -> None:
@@ -52,4 +56,4 @@ def main() -> None:
 if __name__ == '__main__':
     main()
 
-    
+
