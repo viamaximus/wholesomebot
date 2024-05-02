@@ -28,6 +28,28 @@ async def send_message(message: Message, user_message: str) -> None:
     except Exception as e: 
         print(e)
 
+#handle startup
+@client.event
+async def on_ready() -> None:
+    print(f'{client.user} is now running!')
 
+#handle incoming messages
+@client.event
+async def on_message(message: Message) -> None:
+    if message.author == client.user: 
+        return
+    username: str = str(message.author)
+    user_message: str = message.content
+    channel: str = str(message.channel)
+
+    print(f'{username} said: {user_message} in {channel}')
+    await send_message(message, user_message)
+
+#main entry point
+def main() -> None:
+    client.run(token=TOKEN)
+
+if __name__ == '__main__':
+    main()
 
     
