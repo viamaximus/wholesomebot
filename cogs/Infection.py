@@ -26,6 +26,7 @@ class Infection(commands.Cog):
         # Calculate exposure if the sender is infected
         if self.member_statuses[message.author.id] == 'infected':
             await self.calculate_exposure(message)
+            self.write_statuses_to_files()
 
     async def calculate_exposure(self, message):
         # Check next five messages in the channel
@@ -33,6 +34,7 @@ class Infection(commands.Cog):
             if msg.author.id != message.author.id and self.member_statuses[msg.author.id] in ['clean', 'exposed']:
                 self.exposure_scores[msg.author.id] += 3
                 self.member_statuses[msg.author.id] = 'exposed'
+                self.write_statuses_to_files()
 
     def update_infections(self):
         # Sort members by their exposure score in descending order
@@ -41,6 +43,19 @@ class Infection(commands.Cog):
             highest_exposure_member = max(exposed_members, key=exposed_members.get)
             self.member_statuses[highest_exposure_member] = 'infected'
             print(f"Member {highest_exposure_member} has been infected on {datetime.datetime.now()}.")
+            self.write_statuses_to_files()
+
+    def write_statuses_to_files(self):
+        with open("infection_data/clean_members.txt", "w") as clean_file, \
+             open("infection_data/exposed_members.txt", "w") as exposed_file, \
+             open("infection_data/infected_members.txt", "w") as infected_file:
+            for member_id, status in self.member_statuses.items():
+                if status == 'clean':
+                    clean_file.write(f"{member_id}\n")
+                elif status == 'exposed':
+                    exposed_file.write(f"{member_id}\n")
+                elif status == 'infected':
+                    infected_file.write(f"{member_id}\n")
 
     @commands.command()
     async def status(self, ctx, member: discord.Member):
