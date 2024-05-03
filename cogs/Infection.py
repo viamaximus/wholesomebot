@@ -48,5 +48,5 @@ class Infection(commands.Cog):
         status = self.member_statuses[member.id]
         await ctx.send(f"{member.name} is currently {status}.")
 
-def setup(bot):
-    bot.add_cog(Infection(bot))
+async def setup(bot):
+    await bot.add_cog(Infection(bot))
