@@ -1,7 +1,7 @@
 from discord.ext import commands
 import os
 
-class MemberLoggerCog(commands.Cog):
+class MemberLogger(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -26,4 +26,4 @@ class MemberLoggerCog(commands.Cog):
                 file.write(f'Bot: {member.bot}\n')
 
 async def setup(bot):
-    await bot.add_cog(MemberLoggerCog(bot))
+    await bot.add_cog(MemberLogger(bot))
