@@ -5,7 +5,7 @@ import discord
 from dotenv import load_dotenv
 from discord import Intents, Client, Message
 from discord.ext import commands, tasks
-from responses import get_response
+#from responses import get_response
 from itertools import cycle
 
 #load token
@@ -24,13 +24,14 @@ async def change_status():
 @client.event
 async def on_ready() -> None:
     print(f'{client.user} is now running!')
+    change_status.start()
+    print(f'Logged in as {client.user}')
 
 async def load():
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
             await client.load_extension(f'cogs.{filename[:-3]}')
             print(f'Loaded {filename[:-3]}')
-
 
 
 #main entry point
