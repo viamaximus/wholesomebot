@@ -5,15 +5,15 @@ import discord
 from dotenv import load_dotenv
 from discord import Intents, Client, Message
 from discord.ext import commands, tasks
-#from responses import get_response
 from itertools import cycle
+
+intents = discord.Intents.default()
+intents.members = True  # Necessary to access guild members
+client = commands.Bot(command_prefix='~', intents=intents)
 
 #load token
 load_dotenv()
 TOKEN: Final[str] = os.getenv('DISCORD_TOKEN')
-
-#load prefix
-client = commands.Bot(command_prefix='~', intents=discord.Intents.all())
 
 bot_status = cycle(['in my banky', ':3:3:#:3:3:3', 'mphghh...', 'in your walls', 'use "~" for commands!'])
 @tasks.loop(seconds=10)                   
@@ -29,8 +29,9 @@ async def on_ready() -> None:
 
 async def load():
     await client.load_extension('cogs.DataHandler') # Load the DataHandler cog first
+    print(f"loaded DataHandler")
     for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
+        if filename.endswith('.py') and filename != 'DataHandler.py':
             await client.load_extension(f'cogs.{filename[:-3]}')
             print(f'Loaded {filename[:-3]}')
 

@@ -16,29 +16,32 @@ class Infection(commands.Cog):
     #triggered when a message from an infected member is detected
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.bot or not self.data_handler:
+        if message.author.bot or not self.data_handler: # If the message author is a bot or the data handler is not available
             print('Ignoring message, bot detected, or data not in handler')
             return
         
-        members_data = self.data_handler.get_data()
-        if str(message.author.id) not in members_data:
+        members_data = await self.data_handler.get_data() 
+        if str(message.author.id) not in members_data: # If the message author is not in the data
+            print(f"Member {message.author.name} not found in data")
             return
         
-        member_data = members_data[str(message.author.id)]
-        if member_data['exposure_status'] == 'infected':
-            await self.process_exposure(message)
-    
+        member_data = members_data[str(message.author.id)] # Get the member data
+        if member_data['exposure_status'] == 'infected': # If the member is infected
+            print(f'Infection detected in {message.author.name}.') # Log the infection
+            await self.process_exposure(message) # Process the exposure
+
 
     async def process_exposure(self, message, members_data):
         #Increments exposure scores based on interaction with an infected member.
         async for msg in message.channel.history(limit=5, after=message):   # Get the last 5 messages after the infected message
             if msg.author.id != message.author.id and msg.author.id in members_data: # If the message author is not the infected member and is in the data
-                affected_member = members_data[str(msg.author.id)]
-                if affected_member['exposure_status'] == 'clean':
-                    affected_member['exposure_status'] = 'exposed'
-                affected_member['exposure_score'] += 3
-                print(f'Exposure score for was {msg.author.name}, is now {affected_member["exposure_score"]}.')
-        await self.data_handler.save_data()
+                affected_member = members_data[str(msg.author.id)] # Get the affected member
+                if affected_member['exposure_status'] == 'clean': # If the affected member is clean
+                    print(f"Member {msg.author.name} was clean, is now exposed.") # Log the exposure
+                    affected_member['exposure_status'] = 'exposed' # Set the exposure status to exposed
+                affected_member['exposure_score'] += 3 # Increment the exposure score by 3
+                print(f'Exposure score for was {msg.author.name}, is now {affected_member["exposure_score"]}.') # print the exposure score
+        await self.data_handler.save_data() # Save the data
 
     def update_infections(self): 
         #Selects one member to infect based on the highest exposure score.
