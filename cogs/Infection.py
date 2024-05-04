@@ -23,9 +23,9 @@ class Infection(commands.Cog):
             return {}
         
     def save_data(self):
-            #Saves member data to a JSON file.
-            with open('userdata/members_data.json', 'w') as f:
-                json.dump(self.members_data, f, indent=4)
+        #Saves member data to a JSON file.
+        with open('userdata/members_data.json', 'w') as f:
+            json.dump(self.members_data, f, indent=4)
 
 
     #triggered when a message from an infected member is detected
@@ -33,14 +33,21 @@ class Infection(commands.Cog):
     async def on_message(self, message):
         print(f'Message detected from {message.author.name}.')
         print(f'procesing message {message.content}')
-        if message.author.bot or message.author.id not in self.members_data: # Ignore bots and members not in the data
-            print('Ignoring message, either bot or not in data')
+        
+        if message.author.bot:
+            print('Ignoring message, bot detected')
             return
+        if message.author.id not in self.members_data:
+            print(f"member not in data: {message.author.name} (ID: {message.author.id})")
+            return
+    
 
         member_data = self.members_data[str(message.author.id)] # Get the member's data
         if member_data['exposure_status'] == 'infected': # If the member is infected
             print(f'Infection detected in {message.author.name}.')
             await self.process_exposure(message) # Process the exposure
+        else: 
+            print(f'No infection detected in {message.author.name}.')
 
     async def process_exposure(self, message):
         #Increments exposure scores based on interaction with an infected member.

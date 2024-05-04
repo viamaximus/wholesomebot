@@ -28,6 +28,7 @@ async def on_ready() -> None:
     print(f'Logged in as {client.user}')
 
 async def load():
+    await client.load_extension('cogs.DataHandler') # Load the DataHandler cog first
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
             await client.load_extension(f'cogs.{filename[:-3]}')
