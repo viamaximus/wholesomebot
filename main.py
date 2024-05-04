@@ -33,7 +33,6 @@ async def load():
             await client.load_extension(f'cogs.{filename[:-3]}')
             print(f'Loaded {filename[:-3]}')
 
-
 #main entry point
 async def main():
     async with client: 
@@ -41,4 +40,3 @@ async def main():
         await client.start(TOKEN)
 
 asyncio.run(main())
-
