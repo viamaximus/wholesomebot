@@ -20,5 +20,12 @@ class DataHandler(commands.Cog):
         with open(self.file_path, 'w') as f:
             json.dump(self.data, f, indent=4)
 
+    async def get_data(self):
+        return self.data
+
+    async def update_data(self, key, value):
+        self.data[key] = value
+        self.save_data()
+
 def setup(bot):
     bot.add_cog(DataHandler(bot))
