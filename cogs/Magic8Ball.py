@@ -9,9 +9,9 @@ class Magic8Ball(commands.Cog):
     def __init__(self, client):
         self.client = client
     
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print('Magic8Ball is ready')
+    #@commands.Cog.listener()
+    #async def on_ready(self):
+    #    print('Magic8Ball is ready')
     
     @commands.command(aliases=['8ball', 'eightball', '8 ball', 'eight ball'])
     async def magic8ball(self, ctx, *, question):

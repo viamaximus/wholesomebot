@@ -18,11 +18,11 @@ class MemberLogger(commands.Cog):
                 print("DataHandler still not loaded.")
                 return
         
-        print("DataHandler is loaded, proceeding with member logging.")
+        #print("DataHandler is loaded, proceeding with member logging.")
 
         #print(f"logging members in {len(self.bot.guilds)} guilds")
         for guild in self.bot.guilds:
-            print(f"line25: Logging members for {guild.name}")
+            #print(f"line25: Logging members for {guild.name}")
             await self.log_members(guild)
         
         if not self.data_handler:

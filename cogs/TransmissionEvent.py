@@ -55,7 +55,7 @@ class TransmissionEvent(commands.Cog):
         guild = self.bot.get_guild(self.guild_id)
         role = discord.utils.get(guild.roles, name="blueRole")
         await member.add_roles(role)
-        await member.send("Congratulations! You have been infected. You now have acess to the infected channel.")
+        await member.send("Congratulations! You have been infected. You now have acess to the infected channel. Alternatively, you can send $4.99 to max's venmo account to be cured.")
         print(f"{member.name} has been infected.")
 
 async def setup(bot):
