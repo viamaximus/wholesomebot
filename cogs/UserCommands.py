@@ -36,6 +36,7 @@ class UserCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.config_file = 'userdata/.config'
+        self.scoreboard_file = 'userdata/scoreboard.txt'
         self.load_config()
 
     def load_config(self):
@@ -52,22 +53,54 @@ class UserCommands(commands.Cog):
     
     @commands.command(help = "Get the exposure score of a user.")
     async def score(self, ctx, username: discord.Member=None):
-        username = username or ctx.author
+        username = username or ctx.author  # Default to the command sender if no user is specified
         data_handler = self.bot.get_cog('DataHandler')
         if not data_handler:
             await ctx.send("DataHandler cog is not loaded.")
             return
-        data = await data_handler.get_data()
-        user_data = data_handler.get_data(str(username.id))
-        score = user_data.get('exposure_score', 0)
+        data = await data_handler.get_data()  # Ensure this retrieves the data correctly
+        user_data = data.get(str(username.id), {})  # Safely get the user data
+        score = user_data.get('exposure_score', 0)  # Default to 0 if no score is found
         await ctx.send(f"{username.mention}'s exposure score is {score}.")
+
+    @commands.command(help="Initialize or reset the scoreboard with sorted user data.")
+    @commands.has_permissions(administrator=True)
+    async def init_scoreboard(self, ctx):
+        data_handler = self.bot.get_cog('DataHandler')
+        if not data_handler:
+            await ctx.send("DataHandler cog is not loaded.")
+            return
+        
+        members_data = await data_handler.get_data()  # Assume this gets all user data
+        guild = ctx.guild
+        
+        # Prepare a list of tuples (username, score) for sorting
+        scoreboard_content = []
+        for member_id, info in members_data.items():
+            member = guild.get_member(int(member_id))
+            if member:
+                username = member.display_name  # or member.name if you want the Discord username
+                score = info.get('exposure_score', 0)
+                scoreboard_content.append((username, score))
+            else:
+                print(f"Member with ID {member_id} not found in the guild.")
+        
+        # Sort the list of tuples by the score in descending order
+        scoreboard_content.sort(key=lambda x: x[1], reverse=True)
+
+        # Write the sorted data to the scoreboard file
+        with open(self.scoreboard_file, 'w') as f:
+            for username, score in scoreboard_content:
+                f.write(f"{username} {score}\n")
+        
+        await ctx.send("Scoreboard has been initialized and sorted by exposure scores.")
 
     @commands.command(help = "Get the scoreboard.")
     async def scoreboard(self, ctx):
         with open('userdata/scoreboard.txt', 'r') as f:
-            scoreboard = f.readlines()
+            scoreboard = f.read()  # Use .read() to get the whole content as a single string
         await ctx.send(f"```{scoreboard}```")
-    
+        
     @commands.command(help = "Set the infected role.")
     async def configRole(self, ctx, role: discord.Role):
         self.config['infected_role'] = role.id

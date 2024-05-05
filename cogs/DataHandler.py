@@ -29,7 +29,7 @@ class DataHandler(commands.Cog):
             self.data = data
         with open(self.file_path, 'w') as f:
             json.dump(self.data, f, indent=4)
-            print(f"Data saved to {self.file_path}")
+            #print(f"Data saved to {self.file_path}")
 
     async def get_data(self):
         #print(f"Data requested. {len(self.data)} members loaded.")

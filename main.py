@@ -8,8 +8,8 @@ from discord.ext import commands, tasks
 from itertools import cycle
 
 intents = discord.Intents.default()
-intents.members = True  # Necessary to access guild members
-client = commands.Bot(command_prefix='~', intents=intents)
+#intents.members = True  # Necessary to access guild members
+client = commands.Bot(command_prefix='~', intents=intents.all())
 
 #load token
 load_dotenv()

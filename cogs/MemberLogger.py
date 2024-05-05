@@ -20,7 +20,7 @@ class MemberLogger(commands.Cog):
         
         print("DataHandler is loaded, proceeding with member logging.")
 
-        print(f"logging members in {len(self.bot.guilds)} guilds")
+        #print(f"logging members in {len(self.bot.guilds)} guilds")
         for guild in self.bot.guilds:
             print(f"line25: Logging members for {guild.name}")
             await self.log_members(guild)
@@ -36,12 +36,12 @@ class MemberLogger(commands.Cog):
     async def log_members(self, guild):
     #Logs each member in the guild to a JSON file.
         self.members_data = await self.data_handler.get_data()
-        print(f"line 39: starting Logging members in {guild.name}, with {len(guild.members)} members.")       
+        #print(f"line 39: starting Logging members in {guild.name}, with {len(guild.members)} members.")       
 
         infected_role_name = "blueRole"
 
         for member in guild.members:
-            print(f"Member {member.name} initializing")
+            #print(f"Member {member.name} initializing")
             if str(member.id) not in self.members_data:
                 is_infected=any(role.name == infected_role_name for role in member.roles)
                 self.members_data[member.id] = {
@@ -56,7 +56,7 @@ class MemberLogger(commands.Cog):
                 print(f"Member {member.name} logged, infected: {is_infected}, status: {self.members_data[member.id]['exposure_status']}, score: {self.members_data[member.id]['exposure_score']}, time: {self.members_data[member.id]['infected_time']}")
 
         await self.data_handler.save_data()
-        print(f"line 59: finished logging members in {guild.name}")
+        #print(f"line 59: finished logging members in {guild.name}")
 
 async def setup(bot):
     await bot.add_cog(MemberLogger(bot))
