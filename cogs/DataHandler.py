@@ -19,7 +19,7 @@ class DataHandler(commands.Cog):
         except FileNotFoundError:
             self.save_data({})
             return {}
-        except json.JSONDecodeError:
+        except json.JSONDecodeError as e:
             print(f"Error loading data ({e}). Initializing empty dataset.")
             self.save_data({})
             return {}
