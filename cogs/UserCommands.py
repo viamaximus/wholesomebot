@@ -3,7 +3,36 @@ from discord.ext import commands
 import json
 import os
 
-class UserCommands(commands.cog):
+class CustomHelpCommand(commands.HelpCommand):
+    def get_command_signature(self, command):
+        return f'{self.clean_prefix}{command.qualified_name} {command.signature}'
+
+    async def send_bot_help(self, mapping):
+        channel = self.get_destination()
+        help_text = "Here are all of my commands:\n\n"
+        for cog, commands in mapping.items():
+            filtered_commands = await self.filter_commands(commands, sort=True)
+            command_signatures = [self.get_command_signature(cmd) for cmd in filtered_commands]
+            if command_signatures:
+                cog_name = getattr(cog, "qualified_name", "No Category")
+                help_text += f"**{cog_name}**\n" + "\n".join(command_signatures) + "\n\n"
+        await channel.send(help_text)
+
+    async def send_command_help(self, command):
+        channel = self.get_destination()
+        help_text = f"**{command.name}**\n{command.help}\n\n"
+        help_text += f"**Syntax:** {self.get_command_signature(command)}"
+        await channel.send(help_text)
+
+    async def send_group_help(self, group):
+        channel = self.get_destination()
+        help_text = f"**{group.name}**\n{group.help}\n\n"
+        for cmd in group.commands:
+            help_text += f"**{cmd.name}** - {cmd.help}\n"
+        help_text += f"\nUse `{self.clean_prefix}help [command]` for more info on a command."
+        await channel.send(help_text)
+
+class UserCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.config_file = 'userdata/.config'
@@ -21,7 +50,7 @@ class UserCommands(commands.cog):
         with open(self.config_file, 'w') as f:
             json.dump(self.config, f, indent=4)
     
-    @commands.command()
+    @commands.command(help = "Get the exposure score of a user.")
     async def score(self, ctx, username: discord.Member=None):
         username = username or ctx.author
         data_handler = self.bot.get_cog('DataHandler')
@@ -33,29 +62,17 @@ class UserCommands(commands.cog):
         score = user_data.get('exposure_score', 0)
         await ctx.send(f"{username.mention}'s exposure score is {score}.")
 
-    @commands.command()
+    @commands.command(help = "Get the scoreboard.")
     async def scoreboard(self, ctx):
         with open('userdata/scoreboard.txt', 'r') as f:
             scoreboard = f.readlines()
         await ctx.send(f"```{scoreboard}```")
     
-    @commands.command()
+    @commands.command(help = "Set the infected role.")
     async def configRole(self, ctx, role: discord.Role):
         self.config['infected_role'] = role.id
         self.save_config()
         await ctx.send(f"Infected role set to {role.name}.")
-
-    @commands.command()
-    async def ping(self, ctx):
-        ping_cog = self.bot.get_cog('Ping')
-        if ping_cog: 
-            await ping_cog.ping(ctx)
-    
-    @commands.command()
-    async def ball(self, ctx, *, question):
-        ball_cog = self.bot.get_cog('Magic8Ball')
-        if ball_cog:
-            await ball_cog.ball(ctx, question)
 
 async def setup(bot):
     await bot.add_cog(UserCommands(bot))
