@@ -32,7 +32,7 @@ class DataHandler(commands.Cog):
             print(f"Data saved to {self.file_path}")
 
     async def get_data(self):
-        print(f"Data requested. {len(self.data)} members loaded.")
+        #print(f"Data requested. {len(self.data)} members loaded.")
         return self.data
 
 
