@@ -33,6 +33,7 @@ class Infection(commands.Cog):
             print(f"incremented exposure score for {message.author.name} to {members_data[member_id]['exposure_score']}")
         else:
             #start tracking exposure if not already exposed or infected
+            #this function is for testing only, turn off later.
             members_data[member_id]['exposure_status'] = 'exposed'
             members_data[member_id]['exposure_score'] = 1 # Set the exposure score to 1
             await self.data_handler.save_data()
@@ -41,6 +42,9 @@ class Infection(commands.Cog):
 
     async def process_exposure(self, message, members_data):
         #Increments exposure scores based on interaction with an infected member.
+        members_data = await self.data_handler.get_data()
+        infected_member_id = str(message.author.id)
+
         async for msg in message.channel.history(limit=5, after=message):   # Get the last 5 messages after the infected message
             if msg.author.id != message.author.id and msg.author.id in members_data: # If the message author is not the infected member and is in the data
                 affected_member = members_data[str(msg.author.id)] # Get the affected member
