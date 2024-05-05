@@ -16,7 +16,7 @@ class Infection(commands.Cog):
     #triggered when a message is detected
     @commands.Cog.listener()
     async def on_message(self, message):
-        #print(f"Message from user {message.author} detected: {message.content}")
+        print(f"Message from user {message.author} detected: {message.content}")
         if message.author.bot or not self.data_handler: # If the message author is a bot or the data handler is not available
             print('Ignoring message, bot detected, or data not in handler')
             return
@@ -25,13 +25,13 @@ class Infection(commands.Cog):
         member_id = str(message.author.id)
         
         if member_id not in members_data: # If the message author is not in the data
-            #print(f"Member {message.author.name} not found in data")
+            print(f"Member {message.author.name} not found in data")
             return
         
-        #print(f"message author passed checks")
+        print(f"message author passed checks")
         
         if members_data[member_id]['exposure_status'] in ['exposed', 'infected']:
-            #print(f"Member {message.author.name} is exposed or infected.")
+            print(f"Member {message.author.name} is exposed or infected.")
             members_data[member_id]['exposure_score'] += 1 # Increment the exposure score by 1
             print(f"incremented exposure score for {message.author.name} to {members_data[member_id]['exposure_score']}")
             await self.data_handler.save_data(members_data) # Save the data

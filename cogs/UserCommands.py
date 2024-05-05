@@ -63,19 +63,19 @@ class UserCommands(commands.Cog):
         score = user_data.get('exposure_score', 0)  # Default to 0 if no score is found
         await ctx.send(f"{username.mention}'s exposure score is {score}.")
 
-    @commands.command(help="Initialize or reset the scoreboard with sorted user data.")
-    @commands.has_permissions(administrator=True)
-    async def init_scoreboard(self, ctx):
+    @commands.command(help="Update and display the scoreboard.")
+    #@commands.has_permissions(administrator=True)
+    async def scoreboard(self, ctx):
         data_handler = self.bot.get_cog('DataHandler')
         if not data_handler:
             await ctx.send("DataHandler cog is not loaded.")
             return
-        
-        members_data = await data_handler.get_data()  # Assume this gets all user data
+
+        # Retrieve data and prepare scoreboard
+        members_data = await data_handler.get_data()
         guild = ctx.guild
-        
-        # Prepare a list of tuples (username, score) for sorting
         scoreboard_content = []
+
         for member_id, info in members_data.items():
             member = guild.get_member(int(member_id))
             if member:
@@ -84,7 +84,7 @@ class UserCommands(commands.Cog):
                 scoreboard_content.append((username, score))
             else:
                 print(f"Member with ID {member_id} not found in the guild.")
-        
+
         # Sort the list of tuples by the score in descending order
         scoreboard_content.sort(key=lambda x: x[1], reverse=True)
 
@@ -92,13 +92,10 @@ class UserCommands(commands.Cog):
         with open(self.scoreboard_file, 'w') as f:
             for username, score in scoreboard_content:
                 f.write(f"{username} {score}\n")
-        
-        await ctx.send("Scoreboard has been initialized and sorted by exposure scores.")
 
-    @commands.command(help = "Get the scoreboard.")
-    async def scoreboard(self, ctx):
-        with open('userdata/scoreboard.txt', 'r') as f:
-            scoreboard = f.read()  # Use .read() to get the whole content as a single string
+        # Read and send the updated scoreboard
+        with open(self.scoreboard_file, 'r') as f:
+            scoreboard = f.read()
         await ctx.send(f"```{scoreboard}```")
         
     @commands.command(help = "Set the infected role.")
