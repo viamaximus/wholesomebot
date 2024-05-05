@@ -17,18 +17,26 @@ class Infection(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot or not self.data_handler: # If the message author is a bot or the data handler is not available
-            print('Ignoring message, bot detected, or data not in handler')
+            #print('Ignoring message, bot detected, or data not in handler')
             return
         
-        members_data = await self.data_handler.get_data() 
-        if str(message.author.id) not in members_data: # If the message author is not in the data
+        members_data = await self.data_handler.get_data()
+        member_id = str(message.author.id)
+        
+        if member_id not in members_data: # If the message author is not in the data
             print(f"Member {message.author.name} not found in data")
             return
         
-        member_data = members_data[str(message.author.id)] # Get the member data
-        if member_data['exposure_status'] == 'infected': # If the member is infected
-            print(f'Infection detected in {message.author.name}.') # Log the infection
-            await self.process_exposure(message) # Process the exposure
+        if members_data[member_id]['exposure_status'] in ['exposed', 'infected']:
+            members_data[member_id]['exposure_score'] += 1 # Increment the exposure score by 1
+            await self.data.handler.save_data() # Save the data
+            print(f"incremented exposure score for {message.author.name} to {members_data[member_id]['exposure_score']}")
+        else:
+            #start tracking exposure if not already exposed or infected
+            members_data[member_id]['exposure_status'] = 'exposed'
+            members_data[member_id]['exposure_score'] = 1 # Set the exposure score to 1
+            await self.data_handler.save_data()
+            print(f"Member {message.author.name} is now exposed.")
 
 
     async def process_exposure(self, message, members_data):
