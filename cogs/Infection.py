@@ -47,7 +47,6 @@ class Infection(commands.Cog):
         await self.data_handler.save_data(members_data)
         print("Data saved.")
 
-
     @commands.command() 
     async def status(self, ctx, member: discord.Member = None):
         member = member or ctx.author  # Default to the message author if no member is specified
