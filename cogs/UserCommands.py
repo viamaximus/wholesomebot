@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import json
 import os
+from TransmissionLogic import TransmissionLogic
 
 class CustomHelpCommand(commands.HelpCommand):
     def get_command_signature(self, command):
@@ -100,9 +101,25 @@ class UserCommands(commands.Cog):
         
     @commands.command(help = "Set the infected role.")
     async def configRole(self, ctx, role: discord.Role):
-        self.config['infected_role'] = role.id
+        print(f"setting role: {role}")
+        self.config['infected_role'] = role.name
         self.save_config()
         await ctx.send(f"Infected role set to {role.name}.")
+
+    @commands.command(help = "infect a specified user.")
+    @commands.has_permissions(administrator=True)
+    async def infect(self, ctx, username: discord.Member):
+        if 'infected_role' not in self.config:
+            await ctx.send("Infected role not set. Use `configRole` to set the infected role.")
+            return
+        role = ctx.guild.get_role(self.config['infected_role'])
+        if not role:
+            await ctx.send("Infected role not found.")
+            return
+        await username.add_roles(role)
+        await ctx.send(f"{username.mention} has been infected.")
+        
+
 
 async def setup(bot):
     await bot.add_cog(UserCommands(bot))
