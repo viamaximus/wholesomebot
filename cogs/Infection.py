@@ -2,15 +2,11 @@ import discord
 from discord.ext import commands
 import json
 from datetime import datetime, timedelta
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from DiceRoller import Dice
 class Infection(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.data_handler = self.bot.get_cog('DataHandler')
-        self.scheduler = AsyncIOScheduler()
-        #self.scheduler.add_job(self.update_infections, 'cron', hour=19)  # Infect one member daily at 7 PM
-        self.scheduler.start()
         self.keywords = self.load_keywords()
 
     def load_keywords(self):
