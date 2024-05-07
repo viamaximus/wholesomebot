@@ -3,7 +3,7 @@ from discord.ext import commands
 import json
 from datetime import datetime, timedelta
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-
+from DiceRoller import Dice
 class Infection(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -32,16 +32,16 @@ class Infection(commands.Cog):
 
         # Detect keywords and handle infection status
         if any(keyword in message.content for keyword in self.keywords):
-            members_data[member_id]['exposure_score'] += 1
+            members_data[member_id]['exposure_score'] += Dice.roll(1, 4)
             print(f"Detected keyword in message, incrementing score for {message.author.name} to {members_data[member_id]['exposure_score']}")
 
         if members_data[member_id]['exposure_status'] in ['exposed', 'infected']:
-            members_data[member_id]['exposure_score'] += 2
+            members_data[member_id]['exposure_score'] += Dice.roll(2, 4)
             print(f"Incremented exposure score for {message.author.name} to {members_data[member_id]['exposure_score']}")
         else:
             members_data[member_id]['exposure_status'] = 'exposed'
-            members_data[member_id]['exposure_score'] = 1
-            print(f"Member {message.author.name} is now exposed.")
+            members_data[member_id]['exposure_score'] = Dice.roll(1, 8)
+            print(f"Member {message.author.name} is now exposed; score set to {members_data[member_id]['exposure_score']}")
 
         # Save data once after all changes
         await self.data_handler.save_data(members_data)
