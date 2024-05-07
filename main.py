@@ -7,7 +7,6 @@ from discord import Intents, Client, Message
 from discord.ext import commands, tasks
 from itertools import cycle
 
-
 intents = discord.Intents.default()
 
 client = commands.Bot(command_prefix='~', intents=intents.all())

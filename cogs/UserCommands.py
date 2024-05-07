@@ -118,6 +118,19 @@ class UserCommands(commands.Cog):
             return
         await username.add_roles(role)
         await ctx.send(f"{username.mention} has been infected.")
+
+    @commands.command(help = "cue timed infection, based on the top 3 members.")
+    @commands.has_permissions(administrator=True)
+    async def cueInfection(self, ctx):
+
+        task_scheduler = self.bot.get_cog('TaskScheduler')
+        if not task_scheduler:
+            await ctx.send("TaskScheduler cog is not loaded.")
+            return
+        
+        guild_id = ctx.guild.id
+        await task_scheduler.trigger_infect_member(guild_id)
+        await ctx.send("Infection triggered.")
         
 
 
