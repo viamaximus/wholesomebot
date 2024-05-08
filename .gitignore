@@ -3,3 +3,4 @@ userdata/*
 infectiondata/*
 data/*
 pycache/*
+myenv/*

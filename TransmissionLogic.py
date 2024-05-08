@@ -1,7 +1,8 @@
 import discord
+from discord.ext import commands
 import random
 
-class TransmissionLogic:
+class TransmissionLogic():
     def __init__(self, bot):
         self.bot = bot
         self.config = self.load_config()
@@ -40,3 +41,4 @@ class TransmissionLogic:
             
             await member.send("Congratulations! You have been infected and now have access to special channels.")
             print(f"{member} has been infected.")
+

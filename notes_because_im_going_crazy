@@ -1,0 +1,68 @@
+okay so this is just a basic notes document to figure out how to make this mess work
+
+load the bot (main)
+    import everything
+    get the prefix
+    get the token
+    do the status stuff
+    onready: 
+        printouts
+        start status loop
+    load cogs
+        load datahandler first
+        load the rest later
+    main entry point
+
+on message:
+    check for keywords
+        if keyword, extra points
+    add points to their score, !!reorder scoreboard here!!
+    if not exposed, change to exposed
+    save data
+
+on join/leave:
+    go through each member in guild
+
+timed events:
+    specific time:
+        infect user
+        send message to user
+        give them role
+
+Saved Data:
+    userdata - from userlogger - saved into members_data.json
+        id
+        name
+        discriminator
+        bot
+        exposure status
+        exposure score
+        infected time
+    guild data
+        guild id
+        guild name
+        guild users list
+    config - saved into .config
+        prefix
+        role
+        channel(?)
+    keywords - might need a class to add/remove keywords
+        random keywords added to a list - saved into .keywords
+
+
+scoreboards:
+    - two scoreboards:
+        1. board sorted by total score only
+        2. same board, but delete infected members (for finding candidates. ) we'll call this secretboard.
+
+User Infection Flow
+    1. determine candidates
+        - top three from scoreboard are eligible to be infected
+            - these are weighted with funny numbers, but you're more likely to be infected if you're higher on the list
+    2. apply infection: 
+        - change exposure_status from exposed to infected. (this should never change from clean to infected.)
+        - give user the infected role
+        - give them some points
+        - send dm, explain the game
+    
+    

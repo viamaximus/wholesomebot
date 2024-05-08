@@ -3,15 +3,13 @@ from discord.ext import commands
 import json
 from datetime import datetime, timedelta
 from DiceRoller import Dice
+from Infection import Infection
 class Infection(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.data_handler = self.bot.get_cog('DataHandler')
-        self.keywords = self.load_keywords()
-
-    def load_keywords(self):
-        with open('userdata/.keywords', 'r') as file:
-            return [line.strip() for line in file.readlines()]
+        # Load keywords from file
+        self.keywords = Infection.load_keywords()
 
     #triggered when a message is detected
     @commands.Cog.listener()
@@ -40,7 +38,7 @@ class Infection(commands.Cog):
             print(f"Member {message.author.name} is now exposed; score set to {members_data[member_id]['exposure_score']}")
 
         # Save data once after all changes
-        await self.data_handler.save_data(members_data)
+        await self.data_handler.save_user_data(members_data)
         print("Data saved.")
 
     @commands.command() 

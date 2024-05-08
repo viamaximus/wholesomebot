@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 import json
 import os
-from TransmissionLogic import TransmissionLogic
 
 class CustomHelpCommand(commands.HelpCommand):
     def get_command_signature(self, command):
@@ -38,15 +37,10 @@ class UserCommands(commands.Cog):
         self.bot = bot
         self.config_file = 'userdata/.config'
         self.scoreboard_file = 'userdata/scoreboard.txt'
-        self.load_config()
-
-    def load_config(self):
-        if not os.path.exists(self.config_file):
-            self.config = {}
-            self.save_config()
-        else:
-            with open(self.config_file, 'r') as f:
-                self.config = json.load(f)
+        self.Configurator = self.bot.get_cog('Configurator')
+        
+        bot_prefix = self.Configurator.get_prefix()
+        self.config = self.Configurator.load_config()
 
     def save_config(self):
         with open(self.config_file, 'w') as f:
